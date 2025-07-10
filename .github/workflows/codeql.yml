@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '0 2 * * 1' # Tiap Senin jam 09:00 WIB
+    - cron: '0 2 * * 1'
 
 jobs:
   analyze:
@@ -18,9 +18,8 @@ jobs:
       contents: read
 
     strategy:
-      fail-fast: false
       matrix:
-        language: [ 'javascript', 'typescript' ]
+        language: [ 'typescript' ]
 
     steps:
       - name: Checkout repository
@@ -30,9 +29,12 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
+          config-file: .github/codeql/codeql-config.yml
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        with:
+          debug: true
